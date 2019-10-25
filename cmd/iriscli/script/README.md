@@ -72,9 +72,14 @@ transfer-gaia-test.sh
 Start `relayer`
 
 ```bash
-relayer start \
-    "iris" "tcp://localhost:26657" "n0" "12345678" "ibc-iris/n0/iriscli/" "client-to-gaia" \
-    "cosmos" "tcp://localhost:26557" "n0" "12345678" "ibc-gaia/n0/gaiacli/" "client-to-iris"
+# generate relay.toml
+relayer init --home=./
+
+# custom configuration
+vim relay.toml
+
+# start relayer with relay.toml
+relayer start --home=./
 ```
 
 Transfer from `iris`
