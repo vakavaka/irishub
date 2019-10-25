@@ -1,6 +1,6 @@
 # TEST
 
-## Install
+## Install `iris` `gaia` `relayer`
 
 Install `iris`
 
@@ -35,7 +35,7 @@ chmod 777 init.sh
 ./init.sh
 ```
 
-## Start Chains
+## Start `iris` and `gaia`
 
 ```bash
 nohup iris --home ibc-iris/n0/iris start >ibc-iris.log &
@@ -44,6 +44,8 @@ nohup gaiad --home ibc-gaia/n0/gaiad start >ibc-gaia.log &
 
 ## Handshake
 
+Create `client`, `connection` handshake, and `channel` handshake
+
 ```bash
 chmod 777 handshake.sh
 handshake.sh
@@ -51,23 +53,23 @@ handshake.sh
 
 ## Transfer test
 
-Transfer from iris
+Transfer from `iris`
 
 ```bash
 chmod 777 transfer-iris-test.sh
 transfer-iris-test.sh
 ```
 
-Transfer from gaia
+Transfer from `gaia`
 
 ```bash
 chmod 777 transfer-gaia-test.sh
 transfer-gaia-test.sh
 ```
 
-## Transfer With Relayer
+## Transfer with relayer
 
-Start Relayer
+Start `relayer`
 
 ```bash
 relayer start \
@@ -75,21 +77,21 @@ relayer start \
     "cosmos" "tcp://localhost:26557" "n0" "12345678" "ibc-gaia/n0/gaiacli/" "client-to-iris"
 ```
 
-Transfer from iris
+Transfer from `iris`
 
 ```bash
 chmod 777 transfer-iris.sh
 transfer-iris.sh
 ```
 
-Transfer from gaia
+Transfer from `gaia`
 
 ```bash
 chmod 777 transfer-gaia.sh
 transfer-gaia.sh
 ```
 
-Query Result
+Query result
 
 ```bash
 chmod 777 query-accounts.sh
