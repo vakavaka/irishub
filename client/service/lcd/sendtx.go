@@ -151,6 +151,7 @@ type requestServiceReq struct {
 	Input             string       `json:"input"`
 	ServiceFeeCap     string       `json:"service_fee_cap"`
 	Timeout           int64        `json:"timeout"`
+	SuperMode         bool         `json:"super_mode"`
 	Repeated          bool         `json:"repeated"`
 	RepeatedFrequency uint64       `json:"repeated_frequency"`
 	RepeatedTotal     int64        `json:"repeated_total"`
@@ -183,6 +184,7 @@ type updateRequestContextReq struct {
 	BaseTx            utils.BaseTx `json:"base_tx"` // basic tx info
 	Providers         []string     `json:"providers"`
 	ServiceFeeCap     string       `json:"service_fee_cap"`
+	Timeout           int64        `json:"timeout"`
 	RepeatedFrequency uint64       `json:"repeated_frequency"`
 	RepeatedTotal     int64        `json:"repeated_total"`
 	Consumer          string       `json:"consumer"`
@@ -509,8 +511,8 @@ func requestServiceHandlerFn(cdc *codec.Codec, cliCtx context.CLIContext) http.H
 		}
 
 		msg := service.NewMsgRequestService(
-			serviceName, providers, consumer, req.Input, serviceFeeCap,
-			req.Timeout, req.Repeated, req.RepeatedFrequency, req.RepeatedTotal,
+			req.ServiceName, providers, consumer, req.Input, serviceFeeCap,
+			req.Timeout, req.SuperMode, msg.Repeated, req.RepeatedFrequency, req.RepeatedTotal,
 		)
 		if err = msg.ValidateBasic(); err != nil {
 			utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
@@ -566,7 +568,7 @@ func pauseRequestContextHandlerFn(cdc *codec.Codec, cliCtx context.CLIContext) h
 		}
 
 		var req pauseRequestContextReq
-		err := utils.ReadPostBody(w, r, cdc, &req)
+		err = utils.ReadPostBody(w, r, cdc, &req)
 		if err != nil {
 			return
 		}
@@ -606,7 +608,7 @@ func startRequestContextHandlerFn(cdc *codec.Codec, cliCtx context.CLIContext) h
 		}
 
 		var req startRequestContextReq
-		err := utils.ReadPostBody(w, r, cdc, &req)
+		err = utils.ReadPostBody(w, r, cdc, &req)
 		if err != nil {
 			return
 		}
@@ -646,7 +648,7 @@ func killRequestContextHandlerFn(cdc *codec.Codec, cliCtx context.CLIContext) ht
 		}
 
 		var req killRequestContextReq
-		err := utils.ReadPostBody(w, r, cdc, &req)
+		err = utils.ReadPostBody(w, r, cdc, &req)
 		if err != nil {
 			return
 		}
@@ -686,7 +688,7 @@ func updateRequestContextHandlerFn(cdc *codec.Codec, cliCtx context.CLIContext) 
 		}
 
 		var req updateRequestContextReq
-		err := utils.ReadPostBody(w, r, cdc, &req)
+		err = utils.ReadPostBody(w, r, cdc, &req)
 		if err != nil {
 			return
 		}
@@ -705,7 +707,7 @@ func updateRequestContextHandlerFn(cdc *codec.Codec, cliCtx context.CLIContext) 
 		var serviceFeeCap sdk.Coins
 
 		if len(req.ServiceFeeCap) != 0 {
-			serviceFeeCap, err := sdk.ParseCoins(req.ServiceFeeCap)
+			serviceFeeCap, err = sdk.ParseCoins(req.ServiceFeeCap)
 			if err != nil {
 				utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 				return
@@ -724,8 +726,8 @@ func updateRequestContextHandlerFn(cdc *codec.Codec, cliCtx context.CLIContext) 
 		}
 
 		msg := service.NewMsgUpdateRequestContext(
-			requestContextID, providers, serviceFeeCap,
-			req.RepeatedFrequency, req.RepeatedTotal,
+			requestContextID, providers, serviceFeeCap, req.Timeout,
+			req.RepeatedFrequency, req.RepeatedTotal, consumer,
 		)
 		if err = msg.ValidateBasic(); err != nil {
 			utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
