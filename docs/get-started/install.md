@@ -34,6 +34,12 @@ Verify that `go` has been installed successfully
 go version
 ```
 
+Install statik
+
+```bash
+go get github.com/rakyll/statik
+```
+
 ## Install `iris`
 
 After setting up `go` correctly, you should be able to compile and run `iris`.
